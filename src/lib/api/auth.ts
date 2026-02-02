@@ -33,6 +33,7 @@ export interface JobSeekerSignUpData extends SignUpData {
   addressFull?: string
   addressSido?: string
   addressSigungu?: string
+  profileImageUrl?: string
   finalEducation?: string
   introduction?: string
 }
@@ -127,6 +128,7 @@ export const authApi = {
           address_full: jsData.addressFull || null,
           address_sido: jsData.addressSido || null,
           address_sigungu: jsData.addressSigungu || null,
+          profile_image_url: jsData.profileImageUrl || null,
           final_education: jsData.finalEducation || null,
           introduction: jsData.introduction || null,
         })

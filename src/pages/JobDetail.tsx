@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import { 
   MapPin, 
   Clock, 
@@ -16,16 +17,14 @@ import {
 } from 'lucide-react';
 import { ImageWithFallback } from '../components/figma/ImageWithFallback';
 
-interface JobDetailProps {
-  onBack: () => void;
-}
-
-export const JobDetail = ({ onBack }: JobDetailProps) => {
+export const JobDetail = () => {
+  const navigate = useNavigate();
+  const { id } = useParams();
   return (
     <div className="max-w-7xl mx-auto px-4 py-12">
       {/* Breadcrumb / Back */}
       <div className="flex items-center gap-2 mb-10 overflow-x-auto whitespace-nowrap pb-2 scrollbar-hide">
-        <button onClick={onBack} className="flex items-center gap-1.5 text-gray-400 hover:text-yellow-600 transition-colors">
+        <button onClick={() => navigate('/')} className="flex items-center gap-1.5 text-gray-400 hover:text-yellow-600 transition-colors">
           <Home className="w-4 h-4" />
         </button>
         <ChevronRight className="w-3 h-3 text-gray-300" />

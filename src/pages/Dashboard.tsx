@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { 
   Briefcase, 
   FileText, 
@@ -20,10 +21,12 @@ import { ImageWithFallback } from '../components/figma/ImageWithFallback';
 
 interface DashboardProps {
   postings: any[];
-  setPage: (p: string) => void;
 }
 
-const Sidebar = ({ setPage }: { setPage: (p: string) => void }) => (
+const Sidebar = () => {
+  const navigate = useNavigate();
+  
+  return (
   <div className="w-full md:w-80 space-y-4">
     <div className="bg-white rounded-[32px] border border-gray-100 p-8 shadow-sm">
       <div className="flex flex-col items-center text-center mb-8">
@@ -77,12 +80,13 @@ const Sidebar = ({ setPage }: { setPage: (p: string) => void }) => (
       </button>
     </div>
   </div>
-);
+  );
+};
 
-export const Dashboard = ({ postings, setPage }: DashboardProps) => {
+export const Dashboard = ({ postings }: DashboardProps) => {
   return (
     <div className="max-w-7xl mx-auto px-4 py-16 flex flex-col lg:flex-row gap-12">
-      <Sidebar setPage={setPage} />
+      <Sidebar />
       
       <div className="flex-1 space-y-10">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">

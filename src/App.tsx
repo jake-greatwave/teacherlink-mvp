@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { BrowserRouter, Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'motion/react';
 import { Header, Footer } from './components/Layout';
 import { Home } from './pages/Home';
@@ -47,13 +48,14 @@ const MOCK_POSTINGS = [
 ];
 
 
-export default function App() {
-  const [page, setPage] = useState('home');
+function AppContent() {
   const [user, setUser] = useState<any>(null);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     window.scrollTo(0, 0);
-  }, [page]);
+  }, [location.pathname]);
 
   useEffect(() => {
     const checkUser = async () => {
@@ -71,7 +73,7 @@ export default function App() {
     try {
       const currentUser = await authApi.getCurrentUser();
       setUser(currentUser);
-      setPage('home');
+      navigate('/');
     } catch (error) {
       console.error('Failed to get user:', error);
       setUser(null);
@@ -82,59 +84,80 @@ export default function App() {
     try {
       await authApi.signOut();
       setUser(null);
-      setPage('home');
+      navigate('/');
     } catch (error) {
       console.error('Failed to sign out:', error);
     }
   };
 
   const handleSignUpSuccess = () => {
-    setPage('sign-in');
+    navigate('/sign-in');
   };
 
   return (
     <div className="min-h-screen bg-[#fafafa] font-sans selection:bg-yellow-200 selection:text-yellow-900">
-      <Header user={user} setPage={setPage} onSignOut={handleSignOut} />
+      <Header user={user} onSignOut={handleSignOut} />
       
       <main>
         <AnimatePresence mode="wait">
-          {page === 'home' && (
-            <motion.div key="home" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-              <Home postings={MOCK_POSTINGS} setPage={setPage} />
-            </motion.div>
-          )}
-          
-          {page === 'job_detail' && (
-            <motion.div key="job_detail" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
-              <JobDetail onBack={() => setPage('home')} />
-            </motion.div>
-          )}
-
-          {page === 'sign-in' && (
-            <SignIn
-              key="sign-in"
-              onSuccess={handleSignInSuccess}
-              onSignUp={() => setPage('sign-up')}
+          <Routes>
+            <Route 
+              path="/" 
+              element={
+                <motion.div key="home" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                  <Home postings={MOCK_POSTINGS} />
+                </motion.div>
+              } 
             />
-          )}
-
-          {page === 'sign-up' && (
-            <SignUp
-              key="sign-up"
-              onSuccess={handleSignUpSuccess}
-              onSignIn={() => setPage('sign-in')}
+            <Route 
+              path="/jobs/:id" 
+              element={
+                <motion.div key="job-detail" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
+                  <JobDetail />
+                </motion.div>
+              } 
             />
-          )}
-
-          {page === 'dashboard' && (
-            <motion.div key="dashboard" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }}>
-              <Dashboard postings={MOCK_POSTINGS} setPage={setPage} />
-            </motion.div>
-          )}
+            <Route 
+              path="/sign-in" 
+              element={
+                <SignIn
+                  key="sign-in"
+                  onSuccess={handleSignInSuccess}
+                  onSignUp={() => navigate('/sign-up')}
+                />
+              } 
+            />
+            <Route 
+              path="/sign-up" 
+              element={
+                <SignUp
+                  key="sign-up"
+                  onSuccess={handleSignUpSuccess}
+                  onSignIn={() => navigate('/sign-in')}
+                />
+              } 
+            />
+            <Route 
+              path="/dashboard" 
+              element={
+                <motion.div key="dashboard" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }}>
+                  <Dashboard postings={MOCK_POSTINGS} />
+                </motion.div>
+              } 
+            />
+          </Routes>
         </AnimatePresence>
       </main>
 
       <Footer />
     </div>
+  );
+}
+
+export default function App() {
+  return (
+    <BrowserRouter>
+      <AppContent />
+    </BrowserRouter>
   );
 }

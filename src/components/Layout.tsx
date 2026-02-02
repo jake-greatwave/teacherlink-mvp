@@ -1,70 +1,74 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Search, MapPin, Briefcase, Bell, User, Menu } from 'lucide-react';
 
 interface HeaderProps {
   user: any;
-  setPage: (p: string) => void;
   onSignOut?: () => void;
 }
 
-export const Header = ({ user, setPage, onSignOut }: HeaderProps) => (
-  <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-100 px-4 py-3 shadow-xs">
-    <div className="max-w-7xl mx-auto flex justify-between items-center">
-      <div className="flex items-center gap-2 cursor-pointer" onClick={() => setPage('home')}>
-        <img src="/images/teacher_logo.svg" alt="티처링크" className="h-10 w-auto" />
-      </div>
-      
-      <div className="hidden lg:flex items-center gap-10">
-        <button onClick={() => setPage('home')} className="text-gray-600 hover:text-yellow-600 font-bold text-sm transition-colors">채용정보</button>
-        <button className="text-gray-600 hover:text-yellow-600 font-bold text-sm transition-colors">교사지원</button>
-        <button className="text-gray-600 hover:text-yellow-600 font-bold text-sm transition-colors">실시간 커뮤니티</button>
-      </div>
+export const Header = ({ user, onSignOut }: HeaderProps) => {
+  const navigate = useNavigate();
 
-      <div className="flex items-center gap-4">
-        {user ? (
-          <div className="flex items-center gap-4">
-            <button className="relative p-2 text-gray-400 hover:text-yellow-600 transition-colors">
-              <Bell className="w-5 h-5" />
-              <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
-            </button>
-            <div className="flex items-center gap-2">
-              <div 
-                className="flex items-center gap-2.5 bg-gray-50 hover:bg-yellow-50 pl-2 pr-4 py-1.5 rounded-full cursor-pointer transition-all border border-transparent hover:border-yellow-100" 
-                onClick={() => setPage('dashboard')}
-              >
-                <div className="w-8 h-8 bg-yellow-400 rounded-full flex items-center justify-center text-white font-bold text-xs shadow-sm">
-                  {user.user_type === 'kindergarten' ? 'K' : 'J'}
-                </div>
-                <div className="hidden sm:block">
-                  <p className="text-[11px] font-bold text-gray-400 leading-none mb-1 uppercase tracking-wider">
-                    {user.user_type === 'kindergarten' ? '유치원회원' : '교직원회원'}
-                  </p>
-                  <p className="text-sm font-bold text-gray-800 leading-none">{user.nickname} 님</p>
-                </div>
-              </div>
-              {onSignOut && (
-                <button
-                  onClick={onSignOut}
-                  className="px-4 py-2 text-sm font-bold text-gray-500 hover:text-gray-700 transition-colors"
+  return (
+    <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-100 px-4 py-3 shadow-xs">
+      <div className="max-w-7xl mx-auto flex justify-between items-center">
+        <div className="flex items-center gap-2 cursor-pointer" onClick={() => navigate('/')}>
+          <img src="/images/teacher_logo.svg" alt="티처링크" className="h-10 w-auto" />
+        </div>
+        
+        <div className="hidden lg:flex items-center gap-10">
+          <button onClick={() => navigate('/')} className="text-gray-600 hover:text-yellow-600 font-bold text-sm transition-colors">채용정보</button>
+          <button className="text-gray-600 hover:text-yellow-600 font-bold text-sm transition-colors">교사지원</button>
+          <button className="text-gray-600 hover:text-yellow-600 font-bold text-sm transition-colors">실시간 커뮤니티</button>
+        </div>
+
+        <div className="flex items-center gap-4">
+          {user ? (
+            <div className="flex items-center gap-4">
+              <button className="relative p-2 text-gray-400 hover:text-yellow-600 transition-colors">
+                <Bell className="w-5 h-5" />
+                <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
+              </button>
+              <div className="flex items-center gap-2">
+                <div 
+                  className="flex items-center gap-2.5 bg-gray-50 hover:bg-yellow-50 pl-2 pr-4 py-1.5 rounded-full cursor-pointer transition-all border border-transparent hover:border-yellow-100" 
+                  onClick={() => navigate('/dashboard')}
                 >
-                  로그아웃
-                </button>
-              )}
+                  <div className="w-8 h-8 bg-yellow-400 rounded-full flex items-center justify-center text-white font-bold text-xs shadow-sm">
+                    {user.user_type === 'kindergarten' ? 'K' : 'J'}
+                  </div>
+                  <div className="hidden sm:block">
+                    <p className="text-[11px] font-bold text-gray-400 leading-none mb-1 uppercase tracking-wider">
+                      {user.user_type === 'kindergarten' ? '유치원회원' : '교직원회원'}
+                    </p>
+                    <p className="text-sm font-bold text-gray-800 leading-none">{user.nickname} 님</p>
+                  </div>
+                </div>
+                {onSignOut && (
+                  <button
+                    onClick={onSignOut}
+                    className="px-4 py-2 text-sm font-bold text-gray-500 hover:text-gray-700 transition-colors"
+                  >
+                    로그아웃
+                  </button>
+                )}
+              </div>
             </div>
-          </div>
-        ) : (
-          <div className="flex items-center gap-1">
-            <button onClick={() => setPage('sign-in')} className="px-5 py-2.5 text-sm font-bold text-gray-500 hover:text-yellow-600 transition-colors">로그인</button>
-            <button onClick={() => setPage('sign-up')} className="px-6 py-2.5 text-sm font-black bg-yellow-400 text-white rounded-xl hover:bg-yellow-500 shadow-sm hover:shadow-md transition-all">회원가입</button>
-          </div>
-        )}
-        <button className="lg:hidden p-2 text-gray-400">
-          <Menu className="w-6 h-6" />
-        </button>
+          ) : (
+            <div className="flex items-center gap-1">
+              <button onClick={() => navigate('/sign-in')} className="px-5 py-2.5 text-sm font-bold text-gray-500 hover:text-yellow-600 transition-colors">로그인</button>
+              <button onClick={() => navigate('/sign-up')} className="px-6 py-2.5 text-sm font-black bg-yellow-400 text-white rounded-xl hover:bg-yellow-500 shadow-sm hover:shadow-md transition-all">회원가입</button>
+            </div>
+          )}
+          <button className="lg:hidden p-2 text-gray-400">
+            <Menu className="w-6 h-6" />
+          </button>
+        </div>
       </div>
-    </div>
-  </nav>
-);
+    </nav>
+  );
+};
 
 export const Footer = () => (
   <footer className="bg-white border-t border-gray-100 py-20 px-4">

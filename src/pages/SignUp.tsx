@@ -3,6 +3,8 @@ import { motion, AnimatePresence } from 'motion/react'
 import { Mail, Lock, User, School, UserCircle, ArrowRight, AlertCircle, MapPin, Phone, Globe, FileText, GraduationCap, Award, X, ChevronRight } from 'lucide-react'
 import { authApi, type KindergartenSignUpData, type JobSeekerSignUpData } from '@/lib/api/auth'
 import { regions } from '@/models/common'
+import { userProfiles } from '@/models/user'
+import { FileUpload } from '@/components/FileUpload'
 import type { UserType } from '@/types/database.types'
 
 interface SignUpProps {
@@ -27,6 +29,7 @@ export const SignUp = ({ onSuccess, onSignIn }: SignUpProps) => {
   })
 
   const [validationErrors, setValidationErrors] = useState({
+    email: '',
     password: '',
     passwordConfirm: '',
     nickname: '',
@@ -115,6 +118,7 @@ export const SignUp = ({ onSuccess, onSignIn }: SignUpProps) => {
     addressFull: '',
     addressSido: '',
     addressSigungu: '',
+    profileImageUrl: '',
     finalEducation: '',
     introduction: '',
   })
@@ -211,6 +215,7 @@ export const SignUp = ({ onSuccess, onSignIn }: SignUpProps) => {
           addressFull: jobSeekerData.addressFull || undefined,
           addressSido: jobSeekerData.addressSido || undefined,
           addressSigungu: jobSeekerData.addressSigungu || undefined,
+          profileImageUrl: jobSeekerData.profileImageUrl || undefined,
           finalEducation: jobSeekerData.finalEducation || undefined,
           introduction: jobSeekerData.introduction || undefined,
         }
@@ -488,7 +493,7 @@ export const SignUp = ({ onSuccess, onSignIn }: SignUpProps) => {
             </button>
           </div>
 
-          <form onSubmit={(e) => {
+          <form onSubmit={async (e) => {
             e.preventDefault()
             if (!userType) return
 
@@ -496,13 +501,28 @@ export const SignUp = ({ onSuccess, onSignIn }: SignUpProps) => {
             const nicknameError = validateNickname(commonData.nickname)
             const passwordConfirmError = commonData.password !== commonData.passwordConfirm ? '비밀번호가 일치하지 않습니다.' : ''
 
+            let emailError = ''
+            if (commonData.email) {
+              try {
+                await userProfiles.getByEmail(commonData.email)
+                emailError = '이미 사용 중인 이메일입니다.'
+              } catch (error: any) {
+                if (error.message === '사용자를 찾을 수 없습니다.') {
+                  emailError = ''
+                } else {
+                  emailError = '이메일 확인 중 오류가 발생했습니다.'
+                }
+              }
+            }
+
             setValidationErrors({
+              email: emailError,
               password: passwordError,
               passwordConfirm: passwordConfirmError,
               nickname: nicknameError,
             })
 
-            if (!passwordError && !passwordConfirmError && !nicknameError) {
+            if (!emailError && !passwordError && !passwordConfirmError && !nicknameError) {
               setStep(userType)
             }
           }} className="space-y-6">
@@ -511,16 +531,34 @@ export const SignUp = ({ onSuccess, onSignIn }: SignUpProps) => {
                 이메일 계정
               </label>
               <div className="relative group">
-                <Mail className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 group-focus-within:text-yellow-500 transition-colors" />
+                <Mail className={`absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 transition-colors ${
+                  validationErrors.email ? 'text-red-500' : userType ? 'text-gray-400 group-focus-within:text-yellow-500' : 'text-gray-300'
+                }`} />
                 <input
                   type="email"
                   value={commonData.email}
-                  onChange={(e) => setCommonData(prev => ({ ...prev, email: e.target.value }))}
+                  onChange={(e) => {
+                    setCommonData(prev => ({ ...prev, email: e.target.value }))
+                    setValidationErrors(prev => ({
+                      ...prev,
+                      email: '',
+                    }))
+                  }}
                   placeholder="example@email.com"
                   required
-                  className="w-full pl-14 pr-6 py-5 bg-gray-50 border-none rounded-3xl focus:ring-2 focus:ring-yellow-400 transition-all font-bold placeholder:text-gray-300"
+                  disabled={!userType}
+                  className={`w-full pl-14 pr-6 py-5 rounded-3xl border-none transition-all font-bold placeholder:text-gray-300 ${
+                    !userType
+                      ? 'bg-gray-100 cursor-not-allowed opacity-60'
+                      : validationErrors.email
+                      ? 'bg-red-50 focus:ring-2 focus:ring-red-400'
+                      : 'bg-gray-50 focus:ring-2 focus:ring-yellow-400'
+                  }`}
                 />
               </div>
+              {validationErrors.email && (
+                <p className="text-xs font-bold text-red-500 px-1">{validationErrors.email}</p>
+              )}
             </div>
 
             <div className="space-y-2">
@@ -529,7 +567,7 @@ export const SignUp = ({ onSuccess, onSignIn }: SignUpProps) => {
               </label>
               <div className="relative group">
                 <Lock className={`absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 transition-colors ${
-                  validationErrors.password ? 'text-red-500' : 'text-gray-400 group-focus-within:text-yellow-500'
+                  validationErrors.password ? 'text-red-500' : userType ? 'text-gray-400 group-focus-within:text-yellow-500' : 'text-gray-300'
                 }`} />
                 <input
                   type="password"
@@ -553,8 +591,11 @@ export const SignUp = ({ onSuccess, onSignIn }: SignUpProps) => {
                   }}
                   placeholder="8자 이상, 영문과 숫자 포함"
                   required
+                  disabled={!userType}
                   className={`w-full pl-14 pr-6 py-5 rounded-3xl border-none transition-all font-bold placeholder:text-gray-300 ${
-                    validationErrors.password
+                    !userType
+                      ? 'bg-gray-100 cursor-not-allowed opacity-60'
+                      : validationErrors.password
                       ? 'bg-red-50 focus:ring-2 focus:ring-red-400'
                       : 'bg-gray-50 focus:ring-2 focus:ring-yellow-400'
                   }`}
@@ -571,7 +612,7 @@ export const SignUp = ({ onSuccess, onSignIn }: SignUpProps) => {
               </label>
               <div className="relative group">
                 <Lock className={`absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 transition-colors ${
-                  validationErrors.passwordConfirm ? 'text-red-500' : 'text-gray-400 group-focus-within:text-yellow-500'
+                  validationErrors.passwordConfirm ? 'text-red-500' : userType ? 'text-gray-400 group-focus-within:text-yellow-500' : 'text-gray-300'
                 }`} />
                 <input
                   type="password"
@@ -594,8 +635,11 @@ export const SignUp = ({ onSuccess, onSignIn }: SignUpProps) => {
                   }}
                   placeholder="비밀번호를 다시 입력하세요"
                   required
+                  disabled={!userType}
                   className={`w-full pl-14 pr-6 py-5 rounded-3xl border-none transition-all font-bold placeholder:text-gray-300 ${
-                    validationErrors.passwordConfirm
+                    !userType
+                      ? 'bg-gray-100 cursor-not-allowed opacity-60'
+                      : validationErrors.passwordConfirm
                       ? 'bg-red-50 focus:ring-2 focus:ring-red-400'
                       : 'bg-gray-50 focus:ring-2 focus:ring-yellow-400'
                   }`}
@@ -612,7 +656,7 @@ export const SignUp = ({ onSuccess, onSignIn }: SignUpProps) => {
               </label>
               <div className="relative group">
                 <User className={`absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 transition-colors ${
-                  validationErrors.nickname ? 'text-red-500' : 'text-gray-400 group-focus-within:text-yellow-500'
+                  validationErrors.nickname ? 'text-red-500' : userType ? 'text-gray-400 group-focus-within:text-yellow-500' : 'text-gray-300'
                 }`} />
                 <input
                   type="text"
@@ -636,8 +680,11 @@ export const SignUp = ({ onSuccess, onSignIn }: SignUpProps) => {
                   placeholder="2-20자, 한글/영문/숫자만 가능"
                   required
                   maxLength={20}
+                  disabled={!userType}
                   className={`w-full pl-14 pr-6 py-5 rounded-3xl border-none transition-all font-bold placeholder:text-gray-300 ${
-                    validationErrors.nickname
+                    !userType
+                      ? 'bg-gray-100 cursor-not-allowed opacity-60'
+                      : validationErrors.nickname
                       ? 'bg-red-50 focus:ring-2 focus:ring-red-400'
                       : 'bg-gray-50 focus:ring-2 focus:ring-yellow-400'
                   }`}
@@ -655,7 +702,12 @@ export const SignUp = ({ onSuccess, onSignIn }: SignUpProps) => {
               <select
                 value={commonData.signupSource}
                 onChange={(e) => setCommonData(prev => ({ ...prev, signupSource: e.target.value }))}
-                className="w-full pl-6 pr-6 py-5 bg-gray-50 border-none rounded-3xl focus:ring-2 focus:ring-yellow-400 transition-all font-bold"
+                disabled={!userType}
+                className={`w-full pl-6 pr-6 py-5 border-none rounded-3xl focus:ring-2 focus:ring-yellow-400 transition-all font-bold ${
+                  !userType
+                    ? 'bg-gray-100 cursor-not-allowed opacity-60'
+                    : 'bg-gray-50'
+                }`}
               >
                 <option value="">선택해주세요</option>
                 <option value="search">검색엔진</option>
@@ -833,18 +885,16 @@ export const SignUp = ({ onSuccess, onSignIn }: SignUpProps) => {
               </div>
             </div>
 
-            <div className="space-y-2">
-              <label className="block text-[11px] font-black text-gray-400 uppercase tracking-widest px-1">
-                사진 URL
-              </label>
-              <input
-                type="url"
-                value={kindergartenData.profileImageUrl}
-                onChange={(e) => setKindergartenData(prev => ({ ...prev, profileImageUrl: e.target.value }))}
-                placeholder="https://example.com/image.jpg"
-                className="w-full pl-6 pr-6 py-5 bg-gray-50 border-none rounded-3xl focus:ring-2 focus:ring-yellow-400 transition-all font-bold placeholder:text-gray-300"
-              />
-            </div>
+            <FileUpload
+              bucket="profiles"
+              path={`kindergartens/${commonData.email}`}
+              value={kindergartenData.profileImageUrl}
+              onChange={(url) => setKindergartenData(prev => ({ ...prev, profileImageUrl: url || '' }))}
+              accept="image/*"
+              maxSizeMB={10}
+              label="프로필 사진 (선택)"
+              disabled={loading}
+            />
 
             <div className="space-y-2">
               <label className="block text-[11px] font-black text-gray-400 uppercase tracking-widest px-1">
@@ -1004,6 +1054,17 @@ export const SignUp = ({ onSuccess, onSignIn }: SignUpProps) => {
                 />
               </div>
             </div>
+
+            <FileUpload
+              bucket="profiles"
+              path={`job-seekers/${commonData.email}`}
+              value={jobSeekerData.profileImageUrl}
+              onChange={(url) => setJobSeekerData(prev => ({ ...prev, profileImageUrl: url || '' }))}
+              accept="image/*"
+              maxSizeMB={10}
+              label="프로필 사진 (선택)"
+              disabled={loading}
+            />
 
             <div className="space-y-2">
               <label className="block text-[11px] font-black text-gray-400 uppercase tracking-widest px-1">

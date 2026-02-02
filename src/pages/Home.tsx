@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Search, MapPin, Briefcase, ChevronRight, Award, Filter, Sparkles } from 'lucide-react';
 import { motion } from 'motion/react';
 import { JobCard } from '../components/JobCard';
@@ -8,10 +9,10 @@ const JOB_CATEGORIES = ['담임교사', '부담임교사', '특수교사', '조�
 
 interface HomeProps {
   postings: any[];
-  setPage: (p: string) => void;
 }
 
-export const Home = ({ postings, setPage }: HomeProps) => {
+export const Home = ({ postings }: HomeProps) => {
+  const navigate = useNavigate();
   const [selectedRegion, setSelectedRegion] = useState('전체');
 
   return (
@@ -104,7 +105,7 @@ export const Home = ({ postings, setPage }: HomeProps) => {
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
           {postings.filter(p => p.is_recommended).map(job => (
-            <JobCard key={job.id} job={job} onClick={() => setPage('job_detail')} />
+            <JobCard key={job.id} job={job} onClick={() => navigate(`/jobs/${job.id}`)} />
           ))}
         </div>
       </section>
@@ -146,7 +147,7 @@ export const Home = ({ postings, setPage }: HomeProps) => {
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 relative z-10">
             {[...postings, ...postings].slice(0, 8).map((job, idx) => (
-              <JobCard key={`${job.id}-${idx}`} job={job} onClick={() => setPage('job_detail')} />
+              <JobCard key={`${job.id}-${idx}`} job={job} onClick={() => navigate(`/jobs/${job.id}`)} />
             ))}
           </div>
           

@@ -86,7 +86,7 @@ export const SignIn = ({ onSuccess, onSignUp }: SignInProps) => {
             </div>
           </div>
 
-          <div className="flex items-center justify-between px-1">
+          <div className="flex items-center px-1">
             <div className="flex items-center gap-2">
               <input
                 type="checkbox"
@@ -99,12 +99,6 @@ export const SignIn = ({ onSuccess, onSignUp }: SignInProps) => {
                 아이디 저장
               </label>
             </div>
-            <button
-              type="button"
-              className="text-sm font-bold text-gray-400 hover:text-gray-600 transition-colors"
-            >
-              비밀번호를 잊으셨나요?
-            </button>
           </div>
 
           <button

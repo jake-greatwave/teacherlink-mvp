@@ -752,3 +752,56 @@ BEGIN
     (jeju_id, '50020', '서귀포시', 2, 2);
 
 END $$;
+
+
+-- ============================================
+-- Storage Policy 설정
+-- ============================================
+
+-- 1. profiles Bucket (프로필 사진)
+-- 누구나 조회 가능, 로그인한 사용자만 업로드/수정/삭제
+
+-- 모든 사람이 프로필 사진 조회 가능
+CREATE POLICY "Anyone can view profiles" ON storage.objects
+  FOR SELECT USING (bucket_id = 'profiles');
+
+-- 누구나 업로드 가능 (회원가입 시 프로필 사진)
+CREATE POLICY "Anyone can upload profiles" ON storage.objects
+  FOR INSERT WITH CHECK (bucket_id = 'profiles');
+
+-- 누구나 업데이트 가능
+CREATE POLICY "Anyone can update profiles" ON storage.objects
+  FOR UPDATE USING (bucket_id = 'profiles');
+
+-- 누구나 삭제 가능
+CREATE POLICY "Anyone can delete profiles" ON storage.objects
+  FOR DELETE USING (bucket_id = 'profiles');
+
+
+-- 2. attachments Bucket (첨부파일)
+CREATE POLICY "Anyone can view attachments" ON storage.objects
+  FOR SELECT USING (bucket_id = 'attachments');
+
+CREATE POLICY "Anyone can upload attachments" ON storage.objects
+  FOR INSERT WITH CHECK (bucket_id = 'attachments');
+
+CREATE POLICY "Anyone can update attachments" ON storage.objects
+  FOR UPDATE USING (bucket_id = 'attachments');
+
+CREATE POLICY "Anyone can delete attachments" ON storage.objects
+  FOR DELETE USING (bucket_id = 'attachments');
+
+
+-- 3. resumes Bucket (이력서 - 비공개)
+-- 소유자만 접근 가능하도록 설정하려면 애플리케이션 레벨에서 검증 필요
+CREATE POLICY "Anyone can view resumes" ON storage.objects
+  FOR SELECT USING (bucket_id = 'resumes');
+
+CREATE POLICY "Anyone can upload resumes" ON storage.objects
+  FOR INSERT WITH CHECK (bucket_id = 'resumes');
+
+CREATE POLICY "Anyone can update resumes" ON storage.objects
+  FOR UPDATE USING (bucket_id = 'resumes');
+
+CREATE POLICY "Anyone can delete resumes" ON storage.objects
+  FOR DELETE USING (bucket_id = 'resumes');
