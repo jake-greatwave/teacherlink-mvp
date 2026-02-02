@@ -2,11 +2,12 @@ import React from 'react';
 import { Search, MapPin, Briefcase, Bell, User, Menu } from 'lucide-react';
 
 interface HeaderProps {
-  role: string | null;
+  user: any;
   setPage: (p: string) => void;
+  onSignOut?: () => void;
 }
 
-export const Header = ({ role, setPage }: HeaderProps) => (
+export const Header = ({ user, setPage, onSignOut }: HeaderProps) => (
   <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-100 px-4 py-3 shadow-xs">
     <div className="max-w-7xl mx-auto flex justify-between items-center">
       <div className="flex items-center gap-2 cursor-pointer" onClick={() => setPage('home')}>
@@ -20,31 +21,41 @@ export const Header = ({ role, setPage }: HeaderProps) => (
       </div>
 
       <div className="flex items-center gap-4">
-        {role ? (
+        {user ? (
           <div className="flex items-center gap-4">
             <button className="relative p-2 text-gray-400 hover:text-yellow-600 transition-colors">
               <Bell className="w-5 h-5" />
               <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
             </button>
-            <div 
-              className="flex items-center gap-2.5 bg-gray-50 hover:bg-yellow-50 pl-2 pr-4 py-1.5 rounded-full cursor-pointer transition-all border border-transparent hover:border-yellow-100" 
-              onClick={() => setPage('dashboard')}
-            >
-              <div className="w-8 h-8 bg-yellow-400 rounded-full flex items-center justify-center text-white font-bold text-xs shadow-sm">
-                {role === 'kindergarten' ? 'K' : 'J'}
+            <div className="flex items-center gap-2">
+              <div 
+                className="flex items-center gap-2.5 bg-gray-50 hover:bg-yellow-50 pl-2 pr-4 py-1.5 rounded-full cursor-pointer transition-all border border-transparent hover:border-yellow-100" 
+                onClick={() => setPage('dashboard')}
+              >
+                <div className="w-8 h-8 bg-yellow-400 rounded-full flex items-center justify-center text-white font-bold text-xs shadow-sm">
+                  {user.user_type === 'kindergarten' ? 'K' : 'J'}
+                </div>
+                <div className="hidden sm:block">
+                  <p className="text-[11px] font-bold text-gray-400 leading-none mb-1 uppercase tracking-wider">
+                    {user.user_type === 'kindergarten' ? '유치원회원' : '교직원회원'}
+                  </p>
+                  <p className="text-sm font-bold text-gray-800 leading-none">{user.nickname} 님</p>
+                </div>
               </div>
-              <div className="hidden sm:block">
-                <p className="text-[11px] font-bold text-gray-400 leading-none mb-1 uppercase tracking-wider">
-                  {role === 'kindergarten' ? '유치원회원' : '교직원회원'}
-                </p>
-                <p className="text-sm font-bold text-gray-800 leading-none">홍길동 님</p>
-              </div>
+              {onSignOut && (
+                <button
+                  onClick={onSignOut}
+                  className="px-4 py-2 text-sm font-bold text-gray-500 hover:text-gray-700 transition-colors"
+                >
+                  로그아웃
+                </button>
+              )}
             </div>
           </div>
         ) : (
           <div className="flex items-center gap-1">
-            <button onClick={() => setPage('login')} className="px-5 py-2.5 text-sm font-bold text-gray-500 hover:text-yellow-600 transition-colors">로그인</button>
-            <button onClick={() => setPage('signup')} className="px-6 py-2.5 text-sm font-black bg-yellow-400 text-white rounded-xl hover:bg-yellow-500 shadow-sm hover:shadow-md transition-all">회원가입</button>
+            <button onClick={() => setPage('sign-in')} className="px-5 py-2.5 text-sm font-bold text-gray-500 hover:text-yellow-600 transition-colors">로그인</button>
+            <button onClick={() => setPage('sign-up')} className="px-6 py-2.5 text-sm font-black bg-yellow-400 text-white rounded-xl hover:bg-yellow-500 shadow-sm hover:shadow-md transition-all">회원가입</button>
           </div>
         )}
         <button className="lg:hidden p-2 text-gray-400">
