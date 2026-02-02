@@ -1,0 +1,110 @@
+import React from 'react';
+import { Search, MapPin, Briefcase, Bell, User, Menu } from 'lucide-react';
+
+interface HeaderProps {
+  role: string | null;
+  setPage: (p: string) => void;
+}
+
+export const Header = ({ role, setPage }: HeaderProps) => (
+  <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-100 px-4 py-3 shadow-xs">
+    <div className="max-w-7xl mx-auto flex justify-between items-center">
+      <div className="flex items-center gap-2 cursor-pointer" onClick={() => setPage('home')}>
+        <img src="/images/teacher_logo.svg" alt="티처링크" className="h-10 w-auto" />
+      </div>
+      
+      <div className="hidden lg:flex items-center gap-10">
+        <button onClick={() => setPage('home')} className="text-gray-600 hover:text-yellow-600 font-bold text-sm transition-colors">채용정보</button>
+        <button className="text-gray-600 hover:text-yellow-600 font-bold text-sm transition-colors">교사지원</button>
+        <button className="text-gray-600 hover:text-yellow-600 font-bold text-sm transition-colors">실시간 커뮤니티</button>
+      </div>
+
+      <div className="flex items-center gap-4">
+        {role ? (
+          <div className="flex items-center gap-4">
+            <button className="relative p-2 text-gray-400 hover:text-yellow-600 transition-colors">
+              <Bell className="w-5 h-5" />
+              <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
+            </button>
+            <div 
+              className="flex items-center gap-2.5 bg-gray-50 hover:bg-yellow-50 pl-2 pr-4 py-1.5 rounded-full cursor-pointer transition-all border border-transparent hover:border-yellow-100" 
+              onClick={() => setPage('dashboard')}
+            >
+              <div className="w-8 h-8 bg-yellow-400 rounded-full flex items-center justify-center text-white font-bold text-xs shadow-sm">
+                {role === 'kindergarten' ? 'K' : 'J'}
+              </div>
+              <div className="hidden sm:block">
+                <p className="text-[11px] font-bold text-gray-400 leading-none mb-1 uppercase tracking-wider">
+                  {role === 'kindergarten' ? '유치원회원' : '교직원회원'}
+                </p>
+                <p className="text-sm font-bold text-gray-800 leading-none">홍길동 님</p>
+              </div>
+            </div>
+          </div>
+        ) : (
+          <div className="flex items-center gap-1">
+            <button onClick={() => setPage('login')} className="px-5 py-2.5 text-sm font-bold text-gray-500 hover:text-yellow-600 transition-colors">로그인</button>
+            <button onClick={() => setPage('signup')} className="px-6 py-2.5 text-sm font-black bg-yellow-400 text-white rounded-xl hover:bg-yellow-500 shadow-sm hover:shadow-md transition-all">회원가입</button>
+          </div>
+        )}
+        <button className="lg:hidden p-2 text-gray-400">
+          <Menu className="w-6 h-6" />
+        </button>
+      </div>
+    </div>
+  </nav>
+);
+
+export const Footer = () => (
+  <footer className="bg-white border-t border-gray-100 py-20 px-4">
+    <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-16">
+      <div className="col-span-1 md:col-span-2 space-y-6">
+        <div className="flex items-center gap-2">
+          <img src="/images/teacher_logo.svg" alt="티처링크" className="h-9 w-auto" />
+          <span className="text-xl font-black tracking-tighter">티처링크</span>
+        </div>
+        <p className="text-gray-400 text-sm leading-relaxed max-w-sm">
+          유치원 및 어린이집 전문 구인구직 플랫폼 티처링크입니다.<br />
+          우리의 정성은 아이들의 밝은 미래가 됩니다.<br />
+          선생님과 유치원 모두가 행복한 채용 문화를 만들어갑니다.
+        </p>
+        <div className="flex gap-4">
+          <div className="w-10 h-10 rounded-xl bg-gray-50 flex items-center justify-center text-gray-400 hover:bg-yellow-50 hover:text-yellow-500 cursor-pointer transition-all">
+            <span className="font-black text-xs">Insta</span>
+          </div>
+          <div className="w-10 h-10 rounded-xl bg-gray-50 flex items-center justify-center text-gray-400 hover:bg-yellow-50 hover:text-yellow-500 cursor-pointer transition-all">
+            <span className="font-black text-xs">Blog</span>
+          </div>
+        </div>
+      </div>
+      
+      <div>
+        <h4 className="font-black text-gray-900 mb-8 uppercase tracking-widest text-xs">Menu</h4>
+        <ul className="space-y-4 text-sm font-bold text-gray-500">
+          <li className="hover:text-yellow-600 cursor-pointer">채용정보 전체보기</li>
+          <li className="hover:text-yellow-600 cursor-pointer">지역별 공고 검색</li>
+          <li className="hover:text-yellow-600 cursor-pointer">인재 정보 서비스</li>
+          <li className="hover:text-yellow-600 cursor-pointer">커뮤니티/자유게시판</li>
+        </ul>
+      </div>
+
+      <div>
+        <h4 className="font-black text-gray-900 mb-8 uppercase tracking-widest text-xs">Support</h4>
+        <p className="text-2xl font-black text-gray-900 mb-2">1588-1234</p>
+        <p className="text-sm font-bold text-gray-500 mb-4 tracking-tight">평일 09:00 - 18:00 (주말 휴무)</p>
+        <button className="w-full py-3 bg-gray-900 text-white rounded-xl text-sm font-bold hover:bg-gray-800 transition-all">
+          1:1 실시간 상담
+        </button>
+      </div>
+    </div>
+    
+    <div className="max-w-7xl mx-auto border-t border-gray-50 mt-20 pt-10 flex flex-col md:flex-row justify-between items-center gap-6 text-[11px] font-bold text-gray-400 uppercase tracking-widest">
+      <p>© 2026 티처링크 Inc. Proudly Built for Teachers.</p>
+      <div className="flex gap-8">
+        <span className="hover:text-gray-900 cursor-pointer">이용약관</span>
+        <span className="text-yellow-600 hover:text-yellow-700 cursor-pointer">개인정보처리방침</span>
+        <span className="hover:text-gray-900 cursor-pointer">이메일무단수집거부</span>
+      </div>
+    </div>
+  </footer>
+);
