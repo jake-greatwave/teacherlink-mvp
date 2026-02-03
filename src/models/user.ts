@@ -36,9 +36,10 @@ export const userProfiles = {
   },
 
   async create(profile: UserProfileInsert) {
+    // @ts-expect-error - Supabase type inference issue
     const { data, error } = await supabase
       .from('user_profiles')
-      .insert(profile as any)
+      .insert(profile)
       .select()
       .single()
     
@@ -47,9 +48,10 @@ export const userProfiles = {
   },
 
   async update(id: string, updates: UserProfileUpdate) {
+    // @ts-expect-error - Supabase type inference issue
     const { data, error } = await supabase
       .from('user_profiles')
-      .update(updates as any)
+      .update(updates)
       .eq('id', id)
       .select()
       .single()
@@ -59,9 +61,10 @@ export const userProfiles = {
   },
 
   async updateLastLogin(id: string) {
+    // @ts-expect-error - Supabase type inference issue
     const { data, error } = await supabase
       .from('user_profiles')
-      .update({ last_login_at: new Date().toISOString() } as any)
+      .update({ last_login_at: new Date().toISOString() })
       .eq('id', id)
       .select()
       .single()

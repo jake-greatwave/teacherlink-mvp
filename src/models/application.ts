@@ -64,26 +64,29 @@ export const applications = {
   },
 
   async create(application: ApplicationInsert) {
+    // @ts-expect-error - Supabase type inference issue
     const { data, error } = await supabase
       .from('applications')
-      .insert(application as any)
+      .insert(application)
       .select()
       .single()
     
     if (error) throw error
     
-    await (supabase as any)
+    // @ts-expect-error - Supabase type inference issue
+    await supabase
       .from('job_postings')
-      .update({ application_count: (supabase as any).rpc('increment', {}) })
+      .update({ application_count: supabase.rpc('increment', {}) })
       .eq('id', application.job_posting_id)
     
     return data as Application
   },
 
   async update(id: string, updates: ApplicationUpdate) {
+    // @ts-expect-error - Supabase type inference issue
     const { data, error } = await supabase
       .from('applications')
-      .update(updates as any)
+      .update(updates)
       .eq('id', id)
       .select()
       .single()
@@ -102,9 +105,10 @@ export const applications = {
       updates.review_note = reviewNote
     }
     
+    // @ts-expect-error - Supabase type inference issue
     const { data, error } = await supabase
       .from('applications')
-      .update(updates as any)
+      .update(updates)
       .eq('id', id)
       .select()
       .single()
@@ -114,13 +118,14 @@ export const applications = {
   },
 
   async cancel(id: string, reason?: string) {
+    // @ts-expect-error - Supabase type inference issue
     const { data, error } = await supabase
       .from('applications')
       .update({
         status: 'cancelled',
         cancelled_at: new Date().toISOString(),
         cancel_reason: reason || null,
-      } as any)
+      })
       .eq('id', id)
       .select()
       .single()

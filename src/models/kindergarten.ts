@@ -59,9 +59,10 @@ export const kindergartens = {
   },
 
   async create(kindergarten: KindergartenInsert) {
+    // @ts-expect-error - Supabase type inference issue
     const { data, error } = await supabase
       .from('kindergartens')
-      .insert(kindergarten as any)
+      .insert(kindergarten)
       .select()
       .single()
     
@@ -70,9 +71,10 @@ export const kindergartens = {
   },
 
   async update(id: string, updates: KindergartenUpdate) {
+    // @ts-expect-error - Supabase type inference issue
     const { data, error } = await supabase
       .from('kindergartens')
-      .update(updates as any)
+      .update(updates)
       .eq('id', id)
       .select()
       .single()

@@ -47,9 +47,10 @@ export const resumes = {
       await this.unsetPrimary(resume.job_seeker_id)
     }
     
+    // @ts-expect-error - Supabase type inference issue
     const { data, error } = await supabase
       .from('resumes')
-      .insert(resume as any)
+      .insert(resume)
       .select()
       .single()
     
@@ -65,9 +66,10 @@ export const resumes = {
       }
     }
     
+    // @ts-expect-error - Supabase type inference issue
     const { data, error } = await supabase
       .from('resumes')
-      .update(updates as any)
+      .update(updates)
       .eq('id', id)
       .select()
       .single()
@@ -84,12 +86,14 @@ export const resumes = {
       .single()
     
     if (fetchError) throw fetchError
+    if (!resume) throw new Error('Resume not found')
     
-    await this.unsetPrimary(resume.job_seeker_id)
+    await this.unsetPrimary((resume as any).job_seeker_id)
     
+    // @ts-expect-error - Supabase type inference issue
     const { data, error } = await supabase
       .from('resumes')
-      .update({ is_primary: true } as any)
+      .update({ is_primary: true })
       .eq('id', id)
       .select()
       .single()
@@ -99,9 +103,10 @@ export const resumes = {
   },
 
   async unsetPrimary(jobSeekerId: string) {
+    // @ts-expect-error - Supabase type inference issue
     const { error } = await supabase
       .from('resumes')
-      .update({ is_primary: false } as any)
+      .update({ is_primary: false })
       .eq('job_seeker_id', jobSeekerId)
       .eq('is_primary', true)
     
@@ -117,9 +122,10 @@ export const resumes = {
     
     if (fetchError) throw fetchError
     
+    // @ts-expect-error - Supabase type inference issue
     const { data, error } = await supabase
       .from('resumes')
-      .update({ view_count: ((resume as any).view_count || 0) + 1 } as any)
+      .update({ view_count: ((resume as any).view_count || 0) + 1 })
       .eq('id', id)
       .select()
       .single()

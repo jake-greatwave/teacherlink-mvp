@@ -34,9 +34,10 @@ export const jobSeekers = {
   },
 
   async create(jobSeeker: JobSeekerInsert) {
+    // @ts-expect-error - Supabase type inference issue
     const { data, error } = await supabase
       .from('job_seekers')
-      .insert(jobSeeker as any)
+      .insert(jobSeeker)
       .select()
       .single()
     
@@ -45,9 +46,10 @@ export const jobSeekers = {
   },
 
   async update(id: string, updates: JobSeekerUpdate) {
+    // @ts-expect-error - Supabase type inference issue
     const { data, error } = await supabase
       .from('job_seekers')
-      .update(updates as any)
+      .update(updates)
       .eq('id', id)
       .select()
       .single()
@@ -79,9 +81,10 @@ export const educations = {
   },
 
   async create(education: Database['public']['Tables']['educations']['Insert']) {
+    // @ts-expect-error - Supabase type inference issue
     const { data, error } = await supabase
       .from('educations')
-      .insert(education as any)
+      .insert(education)
       .select()
       .single()
     
@@ -90,9 +93,10 @@ export const educations = {
   },
 
   async update(id: string, updates: Database['public']['Tables']['educations']['Update']) {
+    // @ts-expect-error - Supabase type inference issue
     const { data, error } = await supabase
       .from('educations')
-      .update(updates as any)
+      .update(updates)
       .eq('id', id)
       .select()
       .single()
@@ -124,9 +128,10 @@ export const careers = {
   },
 
   async create(career: Database['public']['Tables']['careers']['Insert']) {
+    // @ts-expect-error - Supabase type inference issue
     const { data, error } = await supabase
       .from('careers')
-      .insert(career as any)
+      .insert(career)
       .select()
       .single()
     
@@ -135,9 +140,10 @@ export const careers = {
   },
 
   async update(id: string, updates: Database['public']['Tables']['careers']['Update']) {
+    // @ts-expect-error - Supabase type inference issue
     const { data, error } = await supabase
       .from('careers')
-      .update(updates as any)
+      .update(updates)
       .eq('id', id)
       .select()
       .single()
@@ -169,9 +175,10 @@ export const certificates = {
   },
 
   async create(certificate: Database['public']['Tables']['certificates']['Insert']) {
+    // @ts-expect-error - Supabase type inference issue
     const { data, error } = await supabase
       .from('certificates')
-      .insert(certificate as any)
+      .insert(certificate)
       .select()
       .single()
     
@@ -180,9 +187,10 @@ export const certificates = {
   },
 
   async update(id: string, updates: Database['public']['Tables']['certificates']['Update']) {
+    // @ts-expect-error - Supabase type inference issue
     const { data, error } = await supabase
       .from('certificates')
-      .update(updates as any)
+      .update(updates)
       .eq('id', id)
       .select()
       .single()

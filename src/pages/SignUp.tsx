@@ -370,7 +370,7 @@ export const SignUp = ({ onSuccess, onSignIn }: SignUpProps) => {
               nickname: nicknameError,
             })
 
-            if (!emailError && !passwordError && !passwordConfirmError && !nicknameError) {
+            if (!emailError && !passwordError && !passwordConfirmError && !nicknameError && userType && (userType === 'kindergarten' || userType === 'job_seeker')) {
               setStep(userType)
             }
           }} className="space-y-6">
