@@ -115,7 +115,7 @@ export const SignUp = ({ onSuccess, onSignIn }: SignUpProps) => {
   const [jobSeekerData, setJobSeekerData] = useState({
     fullName: '',
     phone: '',
-    email: '',
+    contactEmail: '',
     addressFull: '',
     addressSido: '',
     addressSigungu: '',
@@ -212,7 +212,7 @@ export const SignUp = ({ onSuccess, onSignIn }: SignUpProps) => {
           userType: 'job_seeker',
           fullName: jobSeekerData.fullName,
           phone: jobSeekerData.phone,
-          email: jobSeekerData.email || undefined,
+          contactEmail: jobSeekerData.contactEmail || undefined,
           addressFull: jobSeekerData.addressFull || undefined,
           addressSido: jobSeekerData.addressSido || undefined,
           addressSigungu: jobSeekerData.addressSigungu || undefined,
@@ -839,8 +839,8 @@ export const SignUp = ({ onSuccess, onSignIn }: SignUpProps) => {
                 <Mail className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 group-focus-within:text-yellow-500 transition-colors" />
                 <input
                   type="email"
-                  value={jobSeekerData.email}
-                  onChange={(e) => setJobSeekerData(prev => ({ ...prev, email: e.target.value }))}
+                  value={jobSeekerData.contactEmail}
+                  onChange={(e) => setJobSeekerData(prev => ({ ...prev, contactEmail: e.target.value }))}
                   placeholder="example@email.com"
                   className="w-full pl-14 pr-6 py-5 bg-gray-50 border-none rounded-3xl focus:ring-2 focus:ring-yellow-400 transition-all font-bold placeholder:text-gray-300"
                 />

@@ -29,7 +29,7 @@ export interface KindergartenSignUpData extends SignUpData {
 export interface JobSeekerSignUpData extends SignUpData {
   fullName: string
   phone: string
-  email?: string
+  contactEmail?: string
   addressFull?: string
   addressSido?: string
   addressSigungu?: string
@@ -87,6 +87,10 @@ export const authApi = {
   async signUp(data: KindergartenSignUpData | JobSeekerSignUpData) {
     const { email, password, nickname, userType, signupSource } = data
 
+    if (!email || !password || !nickname) {
+      throw new Error('필수 정보가 누락되었습니다.')
+    }
+
     try {
       const existingUser = await userProfiles.getByEmail(email).catch(() => null)
       if (existingUser) {
@@ -124,7 +128,7 @@ export const authApi = {
           user_id: userProfile.id,
           full_name: jsData.fullName,
           phone: jsData.phone,
-          email: jsData.email || null,
+          email: jsData.contactEmail || null,
           address_full: jsData.addressFull || null,
           address_sido: jsData.addressSido || null,
           address_sigungu: jsData.addressSigungu || null,

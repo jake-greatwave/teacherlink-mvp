@@ -6,6 +6,7 @@ export interface JWTPayload {
   userId: string
   email: string
   userType: string
+  [key: string]: string
 }
 
 const getSecretKey = () => {
@@ -15,7 +16,7 @@ const getSecretKey = () => {
 export const jwtUtils = {
   async generateToken(payload: JWTPayload): Promise<string> {
     const secretKey = getSecretKey()
-    const token = await new SignJWT(payload)
+    const token = await new SignJWT(payload as Record<string, string>)
       .setProtectedHeader({ alg: 'HS256' })
       .setIssuedAt()
       .setExpirationTime('7d')
@@ -28,7 +29,12 @@ export const jwtUtils = {
     try {
       const secretKey = getSecretKey()
       const { payload } = await jwtVerify(token, secretKey)
-      return payload as JWTPayload
+      const typedPayload = payload as Record<string, string>
+      return {
+        userId: typedPayload.userId || '',
+        email: typedPayload.email || '',
+        userType: typedPayload.userType || '',
+      }
     } catch (error) {
       return null
     }
