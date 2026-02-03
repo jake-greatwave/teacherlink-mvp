@@ -38,7 +38,7 @@ export const userProfiles = {
   async create(profile: UserProfileInsert) {
     const { data, error } = await supabase
       .from('user_profiles')
-      .insert(profile)
+      .insert(profile as any)
       .select()
       .single()
     
@@ -49,7 +49,7 @@ export const userProfiles = {
   async update(id: string, updates: UserProfileUpdate) {
     const { data, error } = await supabase
       .from('user_profiles')
-      .update(updates)
+      .update(updates as any)
       .eq('id', id)
       .select()
       .single()
@@ -61,7 +61,7 @@ export const userProfiles = {
   async updateLastLogin(id: string) {
     const { data, error } = await supabase
       .from('user_profiles')
-      .update({ last_login_at: new Date().toISOString() })
+      .update({ last_login_at: new Date().toISOString() } as any)
       .eq('id', id)
       .select()
       .single()

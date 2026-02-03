@@ -98,7 +98,7 @@ export const jobPostings = {
   async create(posting: JobPostingInsert) {
     const { data, error } = await supabase
       .from('job_postings')
-      .insert(posting)
+      .insert(posting as any)
       .select()
       .single()
     
@@ -109,7 +109,7 @@ export const jobPostings = {
   async update(id: string, updates: JobPostingUpdate) {
     const { data, error } = await supabase
       .from('job_postings')
-      .update(updates)
+      .update(updates as any)
       .eq('id', id)
       .select()
       .single()
@@ -120,7 +120,7 @@ export const jobPostings = {
 
   async incrementViewCount(id: string) {
     const { data, error } = await supabase
-      .rpc('increment_view_count', { posting_id: id })
+      .rpc('increment_view_count', { posting_id: id } as any)
     
     if (error) {
       const { data: posting, error: fetchError } = await supabase
@@ -133,7 +133,7 @@ export const jobPostings = {
       
       const { data: updated, error: updateError } = await supabase
         .from('job_postings')
-        .update({ view_count: (posting.view_count || 0) + 1 })
+        .update({ view_count: ((posting as any).view_count || 0) + 1 } as any)
         .eq('id', id)
         .select()
         .single()
@@ -156,7 +156,7 @@ export const jobPostings = {
     
     const { data, error } = await supabase
       .from('job_postings')
-      .update({ application_count: (posting.application_count || 0) + 1 })
+      .update({ application_count: ((posting as any).application_count || 0) + 1 } as any)
       .eq('id', id)
       .select()
       .single()

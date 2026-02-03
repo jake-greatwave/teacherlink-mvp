@@ -3,8 +3,6 @@ import type { Database } from '@/types/database.types'
 
 type JobCategory = Database['public']['Tables']['job_categories']['Row']
 type Region = Database['public']['Tables']['regions']['Row']
-type JobCategoryInsert = Database['public']['Tables']['job_categories']['Insert']
-type RegionInsert = Database['public']['Tables']['regions']['Insert']
 
 const supabase = createClient()
 
@@ -108,6 +106,6 @@ export const regions = {
     const parentRegion = await this.getByCode(parentCode)
     if (!parentRegion) return []
     
-    return data.filter(r => r.parent_id === parentRegion.id) as Region[]
+    return data.filter((r: any) => r.parent_id === parentRegion.id) as Region[]
   },
 }

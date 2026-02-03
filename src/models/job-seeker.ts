@@ -36,7 +36,7 @@ export const jobSeekers = {
   async create(jobSeeker: JobSeekerInsert) {
     const { data, error } = await supabase
       .from('job_seekers')
-      .insert(jobSeeker)
+      .insert(jobSeeker as any)
       .select()
       .single()
     
@@ -47,7 +47,7 @@ export const jobSeekers = {
   async update(id: string, updates: JobSeekerUpdate) {
     const { data, error } = await supabase
       .from('job_seekers')
-      .update(updates)
+      .update(updates as any)
       .eq('id', id)
       .select()
       .single()
@@ -81,7 +81,7 @@ export const educations = {
   async create(education: Database['public']['Tables']['educations']['Insert']) {
     const { data, error } = await supabase
       .from('educations')
-      .insert(education)
+      .insert(education as any)
       .select()
       .single()
     
@@ -92,7 +92,7 @@ export const educations = {
   async update(id: string, updates: Database['public']['Tables']['educations']['Update']) {
     const { data, error } = await supabase
       .from('educations')
-      .update(updates)
+      .update(updates as any)
       .eq('id', id)
       .select()
       .single()
@@ -126,7 +126,7 @@ export const careers = {
   async create(career: Database['public']['Tables']['careers']['Insert']) {
     const { data, error } = await supabase
       .from('careers')
-      .insert(career)
+      .insert(career as any)
       .select()
       .single()
     
@@ -137,7 +137,7 @@ export const careers = {
   async update(id: string, updates: Database['public']['Tables']['careers']['Update']) {
     const { data, error } = await supabase
       .from('careers')
-      .update(updates)
+      .update(updates as any)
       .eq('id', id)
       .select()
       .single()
@@ -171,7 +171,7 @@ export const certificates = {
   async create(certificate: Database['public']['Tables']['certificates']['Insert']) {
     const { data, error } = await supabase
       .from('certificates')
-      .insert(certificate)
+      .insert(certificate as any)
       .select()
       .single()
     
@@ -182,7 +182,7 @@ export const certificates = {
   async update(id: string, updates: Database['public']['Tables']['certificates']['Update']) {
     const { data, error } = await supabase
       .from('certificates')
-      .update(updates)
+      .update(updates as any)
       .eq('id', id)
       .select()
       .single()

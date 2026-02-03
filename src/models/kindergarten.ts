@@ -61,7 +61,7 @@ export const kindergartens = {
   async create(kindergarten: KindergartenInsert) {
     const { data, error } = await supabase
       .from('kindergartens')
-      .insert(kindergarten)
+      .insert(kindergarten as any)
       .select()
       .single()
     
@@ -72,7 +72,7 @@ export const kindergartens = {
   async update(id: string, updates: KindergartenUpdate) {
     const { data, error } = await supabase
       .from('kindergartens')
-      .update(updates)
+      .update(updates as any)
       .eq('id', id)
       .select()
       .single()

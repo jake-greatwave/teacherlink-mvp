@@ -49,7 +49,7 @@ export const resumes = {
     
     const { data, error } = await supabase
       .from('resumes')
-      .insert(resume)
+      .insert(resume as any)
       .select()
       .single()
     
@@ -67,7 +67,7 @@ export const resumes = {
     
     const { data, error } = await supabase
       .from('resumes')
-      .update(updates)
+      .update(updates as any)
       .eq('id', id)
       .select()
       .single()
@@ -89,7 +89,7 @@ export const resumes = {
     
     const { data, error } = await supabase
       .from('resumes')
-      .update({ is_primary: true })
+      .update({ is_primary: true } as any)
       .eq('id', id)
       .select()
       .single()
@@ -101,7 +101,7 @@ export const resumes = {
   async unsetPrimary(jobSeekerId: string) {
     const { error } = await supabase
       .from('resumes')
-      .update({ is_primary: false })
+      .update({ is_primary: false } as any)
       .eq('job_seeker_id', jobSeekerId)
       .eq('is_primary', true)
     
@@ -119,7 +119,7 @@ export const resumes = {
     
     const { data, error } = await supabase
       .from('resumes')
-      .update({ view_count: (resume.view_count || 0) + 1 })
+      .update({ view_count: ((resume as any).view_count || 0) + 1 } as any)
       .eq('id', id)
       .select()
       .single()

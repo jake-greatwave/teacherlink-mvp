@@ -66,15 +66,15 @@ export const applications = {
   async create(application: ApplicationInsert) {
     const { data, error } = await supabase
       .from('applications')
-      .insert(application)
+      .insert(application as any)
       .select()
       .single()
     
     if (error) throw error
     
-    await supabase
+    await (supabase as any)
       .from('job_postings')
-      .update({ application_count: supabase.rpc('increment', {}) })
+      .update({ application_count: (supabase as any).rpc('increment', {}) })
       .eq('id', application.job_posting_id)
     
     return data as Application
@@ -83,7 +83,7 @@ export const applications = {
   async update(id: string, updates: ApplicationUpdate) {
     const { data, error } = await supabase
       .from('applications')
-      .update(updates)
+      .update(updates as any)
       .eq('id', id)
       .select()
       .single()
@@ -104,7 +104,7 @@ export const applications = {
     
     const { data, error } = await supabase
       .from('applications')
-      .update(updates)
+      .update(updates as any)
       .eq('id', id)
       .select()
       .single()
@@ -120,7 +120,7 @@ export const applications = {
         status: 'cancelled',
         cancelled_at: new Date().toISOString(),
         cancel_reason: reason || null,
-      })
+      } as any)
       .eq('id', id)
       .select()
       .single()
